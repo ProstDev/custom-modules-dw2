@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="e9c36486-dcb4-4707-a468-0d03bb455088" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="d9af6ce8-ec79-4d5e-b3a3-359e8cc53965" file="default-properties.yaml" />
+	<flow name="custom-modules-dw2Flow" doc:id="af49350e-4e8a-4478-92d8-a841939b2bc2" >
+		<http:listener doc:name="Listener" doc:id="636364dd-ecdf-48c4-9d56-6a15c0781700" config-ref="HTTP_Listener_config" path="/custom"/>
+		<ee:transform doc:name="Transform Message" doc:id="f07622d5-4352-4260-8085-9a5c3954178d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/dw
+import getSentenceFromWords from modules::Custom
+---
+getSentenceFromWords(payload)
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
